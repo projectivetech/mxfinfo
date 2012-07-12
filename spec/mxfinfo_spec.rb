@@ -32,7 +32,7 @@ describe MXFinfo do
   #end
 
   it "should redirect stderr to stdout and return if ERROR is included" do
-    info = MXFinfo.scan(name_to_fixture "Shellescape Test.mxf")
+    info = MXFinfo.scan(name_to_fixture "InvalidFileTest.mxf")
     info.should == nil
   end
 
