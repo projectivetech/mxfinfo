@@ -33,9 +33,11 @@ class MXFinfo
       if process
         @filepath = File.absolute_path(input)
         File.exists?(@filepath) ? @valid = true : @valid = false
-        @mxfinfo = mxfinfo if @valid
-        # Check if output contains error from binary
-        @mxfinfo.include?("ERROR") ? @valid = false : @valid = true
+        if @valid
+          @mxfinfo = mxfinfo 
+          # Check if output contains error from binary
+          @mxfinfo.include?("ERROR") ? @valid = false : @valid = true
+        end
       else
         @valid = true
         @mxfinfo = input
