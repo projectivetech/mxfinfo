@@ -81,7 +81,7 @@ class MXFinfo
     alias_method :channel_count, :c_count
 
     mxfinfo_attr_reader :quantizationbits, "Quantization Bits"
-
+    def q_bits; quantizationbits.to_i; end
     alias_method :quantization_bits, :q_bits
 
     mxfinfo_attr_reader :unc_path
