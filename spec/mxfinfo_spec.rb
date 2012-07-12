@@ -27,6 +27,16 @@ describe MXFinfo do
     MXFinfo.scan("imagenary File").should == nil
   end
 
+  it "should work with whitespace filenames" do
+    MXFinfo.scan(name_to_fixture "Shellescape Test.mxf").should_not == nil
+  end
+
+  it "should redirect stderr to stdout" do
+    info = MXFinfo.scan(name_to_fixture "Shellescape Test.mxf")
+    info.should_not == nil
+    info.raw_data.include?("ERROR").should == true
+  end
+
   it "should be possible to access raw data" do
     info = MXFinfo.scan(name_to_fixture "IMG_0395.MOV.A14DC7130D.mxf")
     info.nil?.should == false

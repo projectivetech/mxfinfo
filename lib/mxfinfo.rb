@@ -32,8 +32,8 @@ class MXFinfo
     def initialize(input, process = true)
       if process
         @filepath = File.absolute_path(input)
-        File.exists?(@filepath.shellescape) ? @valid = true : @valid = false
-        @mxfinfo = mxfinfo if (process && @valid)
+        File.exists?(@filepath) ? @valid = true : @valid = false
+        @mxfinfo = mxfinfo if @valid
       else
         @valid = true
         @mxfinfo = input
@@ -95,7 +95,7 @@ class MXFinfo
     private
       def mxfinfo
         # TODO: - add check if return data is valid
-        `#{MXFinfo.binary} #{@filepath.shellescape}`
+        `#{MXFinfo.binary} #{@filepath.shellescape} 2>&1`
       end
 
       def process_data
