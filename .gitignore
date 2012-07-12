@@ -1,5 +1,7 @@
 *.gem
 *.rbc
+*.lock
+.rspec
 .bundle
 .config
 coverage
