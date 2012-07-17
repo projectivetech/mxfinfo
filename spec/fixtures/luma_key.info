@@ -1,0 +1,29 @@
+
+Filename = stevetest_Luma Key_4F4B7967.mxf
+Project name = steve
+Project edit rate = 25/1
+Clip name = stevetest,Luma Key,11
+Clip created = 2012-02-27 12:39:03.000
+Clip edit rate = 25/1
+Clip duration = 47 samples (00:00:01:22)
+Clip video tracks = 1
+Clip audio tracks = 0
+Clip track string = V1
+Video essence
+Essence type = DNxHD 120
+Essence label = 060e2b34040101010e04030102060102
+Track number = 1
+Edit rate = 25/1
+Track duration = 47 samples (00:00:01:22)
+Track segment duration = 47 samples (00:00:01:22)
+Track segment offset = 0 samples (00:00:00:00)
+Start timecode = 0 samples (00:00:00:00)
+Image aspect ratio = 16/9
+Stored WxH = 1920x1080 (full frame)
+Display WxH = 1920x1080 (full frame)
+Material package UID = 060a2b340101010101010f00130000004f4b796759b71931060e2b347f7f2a80
+File package UID     = 060a2b340101010101010f00130000004f4b796759b81931060e2b347f7f2a80
+Physical package UID = 060a2b340101010101010f00130000004f4b796a627e1931060e2b347f7f2a80
+Physical package type = Import
+Physical package name = Precompute Source Mob
+Physical package locator = 

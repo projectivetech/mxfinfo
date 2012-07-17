@@ -23,6 +23,17 @@ class MXFinfo
   class InfoObject
     extend AttrReaders
 
+    @@render = ["Center Smooth",
+    "Color Correction",
+    "Crystal",
+    "Flip-Flop",
+    "FluidBlur",
+    "Left Box",
+    "Luma Key",
+    "Mosaic Effect",
+    "Stabilize",
+    "Timecode Burn-In"]
+
     # RAW AVIDMXFINFO OUTPUT
     def raw_data; @mxfinfo; end
 
@@ -95,6 +106,11 @@ class MXFinfo
     mxfinfo_attr_reader :physical_package_type
     mxfinfo_attr_reader :physical_package_name
     mxfinfo_attr_reader :physical_package_locator
+
+    def render_file?
+      @@render.map{ |r| return true if clip_name.include?(r) }
+      false
+    end
 
     private
       def mxfinfo
