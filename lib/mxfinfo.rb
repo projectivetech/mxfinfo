@@ -108,8 +108,7 @@ class MXFinfo
     mxfinfo_attr_reader :physical_package_locator
 
     def render_file?
-      @@render.map{ |r| return true if clip_name.include?(r) } if clip_name
-      false
+      physical_package_name == "Precompute Source Mob"
     end
 
     private
