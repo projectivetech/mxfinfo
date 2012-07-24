@@ -1,6 +1,7 @@
 require "forwardable"
-require "mxfinfo/version"
-require "mxfinfo/attr_readers"
+require File.join(File.dirname(__FILE__),"mxfinfo/version")
+require File.join(File.dirname(__FILE__),"mxfinfo/attr_readers")
+require File.join(File.dirname(__FILE__),"mxfinfo/string")
 
 class MXFinfo
   extend Forwardable
