@@ -114,7 +114,7 @@ class MXFinfo
     private
       def mxfinfo
         # TODO: - add check if return data is valid
-        `#{MXFinfo.binary} #{@filepath.shellescape} 2>&1`
+        `#{MXFinfo.binary} \"#{@filepath}\" 2>&1`
       end
 
       def process_data
