@@ -1,0 +1,8 @@
+'mxf_disk_file_open_read(filename, &mxfFile)' failed in avid_mxf_info.c, line 525
+Failed to open file (Beep)
+'mxf_disk_file_open_read(filename, &mxfFile)' failed in avid_mxf_info.c, line 525
+Failed to open file (AlertA01.4F8564F8563B3.mxf)
+
+Filename = Beep
+
+Filename = AlertA01.4F8564F8563B3.mxf
