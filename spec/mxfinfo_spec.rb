@@ -23,18 +23,9 @@ describe MXFinfo do
     info.raw_data.empty?.should == false
   end
 
-  it "should return nil if file doesn't exist" do
-    MXFinfo.scan("imagenary File").should == nil
-  end
-
   #it "should work with whitespace filenames" do
   #  MXFinfo.scan(name_to_fixture "Shellescape Test.mxf").should_not == nil
   #end
-
-  it "should redirect stderr to stdout and return if ERROR is included" do
-    info = MXFinfo.scan(name_to_fixture "InvalidFileTest.mxf")
-    info.should == nil
-  end
 
   it "should be possible to access raw data" do
     info = MXFinfo.scan(name_to_fixture "IMG_0395.MOV.A14DC7130D.mxf")

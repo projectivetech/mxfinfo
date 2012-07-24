@@ -13,7 +13,6 @@ class MXFinfo
 
   def self.scan(path)
     info = InfoObject.new(path)
-    info.valid? ? info : nil
   end
 
   def self.import(data)
@@ -48,6 +47,8 @@ class MXFinfo
           @mxfinfo = mxfinfo 
           # Check if output contains error from binary
           @mxfinfo.include?("ERROR") ? @valid = false : @valid = true
+          @mxfinfo.include?("Failed to open file") ? @valid = false : @valid = true
+          @mxfinfo.include?("mxf_disk_file_open_read") ? @valid = false : @valid = true
         end
       else
         @valid = true
