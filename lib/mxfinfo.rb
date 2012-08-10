@@ -88,7 +88,7 @@ class MXFinfo
     mxfinfo_duration_reader :track_duration
     mxfinfo_duration_reader :track_segment_duration
     mxfinfo_duration_reader :track_segment_offset
-    mxfinfo_attr_reader :start_timecode
+    mxfinfo_timecode_reader :start_timecode
     mxfinfo_attr_reader :audio_sampling_rate
 
     mxfinfo_attr_reader :channelcount, "Channel Count"

@@ -71,7 +71,7 @@ describe "IMG_0395.MOV.A14DC7130D.mxf" do
   end
 
   it "should have a start timecode" do
-    @info.start_timecode.should == 0
+    @info.start_timecode.should == "00:00:00:00"
   end
 
   it "should have a audio sampling rate" do

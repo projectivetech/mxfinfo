@@ -50,6 +50,12 @@ class MXFinfo
           t
         }
       end
+
+      def mxfinfo_timecode_reader(*a)
+        mxfinfo_attr_reader(*a) { |v| 
+          v.split(" ")[2].gsub(/\(|\)/,"")
+        }
+      end
     end
   end
 end
