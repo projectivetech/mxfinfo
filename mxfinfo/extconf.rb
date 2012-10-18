@@ -6,4 +6,4 @@ $warnflags = ''
 $defs.push '--std=c99'
 $defs.push '-Wall'
 
-create_makefile('avidmxfinfo')
+create_makefile('mxfinfo')
