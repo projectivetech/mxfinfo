@@ -128,7 +128,7 @@ VALUE cio_get_material_package_uid(VALUE self)
   VALUE ary = rb_ary_new2(32);
   for(unsigned int i = 0; i < 32; i++) 
   {
-  	rb_ary_store(ary, i, CHR2FIX(uid[i]));
+    rb_ary_store(ary, i, CHR2FIX(uid[i]));
   }
 
   return ary;
@@ -143,20 +143,20 @@ VALUE cio_get_channel_count(VALUE self)
   return UINT2NUM(info->channelCount);
 }
 
-void Init_avidmxfinfo()
+void Init_mxfinfo()
 {
-	m_mxfinfo = rb_define_module("MXFInfo");	
+  m_mxfinfo = rb_define_module("MXFInfo");	
 
-	c_infoobject = rb_define_class_under(m_mxfinfo, "AvidMXFInfo", rb_cObject);
-	rb_define_singleton_method(c_infoobject, "new", cio_new, 1);
+	c_infoobject = rb_define_class_under(m_mxfinfo, "InfoObject", rb_cObject);
+  rb_define_singleton_method(c_infoobject, "new", cio_new, 1);
 	
-    rb_define_method(c_infoobject, "clip_name", cio_get_clip_name, 0);
-    rb_define_method(c_infoobject, "project_name", cio_get_project_name, 0);
-    rb_define_method(c_infoobject, "clip_created", cio_get_clip_created, 0);
-    rb_define_method(c_infoobject, "project_edit_rate", cio_get_project_edit_rate, 0);
-    rb_define_method(c_infoobject, "clip_duration", cio_get_clip_duration, 0);
-    rb_define_method(c_infoobject, "material_package_uid", cio_get_material_package_uid, 0);
-    
-    /* ... */
+  rb_define_method(c_infoobject, "clip_name", cio_get_clip_name, 0);
+  rb_define_method(c_infoobject, "project_name", cio_get_project_name, 0);
+  rb_define_method(c_infoobject, "clip_created", cio_get_clip_created, 0);
+  rb_define_method(c_infoobject, "project_edit_rate", cio_get_project_edit_rate, 0);
+  rb_define_method(c_infoobject, "clip_duration", cio_get_clip_duration, 0);
+  rb_define_method(c_infoobject, "material_package_uid", cio_get_material_package_uid, 0);
+
+  /* ... */
 	rb_define_method(c_infoobject, "channel_count", cio_get_channel_count, 0);
 }
