@@ -183,7 +183,7 @@ void ami_free_info(AvidMXFInfo *info);
 void ami_print_info(AvidMXFInfo *info);
 /* TODO: add function to print machine readable info e.g. newline delimited fields */
 
-
+const char* get_essence_type_string(AvidEssenceType essenceType, mxfRational editRate);
 
 #ifdef __cplusplus
 }

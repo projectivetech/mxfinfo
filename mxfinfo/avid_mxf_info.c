@@ -378,7 +378,7 @@ static const char* get_dnxhd_type_string(AvidEssenceType essenceType, mxfRationa
     return ESSENCE_TYPE_STRINGS[essenceType];
 }
 
-static const char* get_essence_type_string(AvidEssenceType essenceType, mxfRational editRate)
+const char* get_essence_type_string(AvidEssenceType essenceType, mxfRational editRate)
 {
     assert(essenceType < ARRAY_SIZE(ESSENCE_TYPE_STRINGS));
     assert(PCM_ESSENCE_TYPE + 1 == ARRAY_SIZE(ESSENCE_TYPE_STRINGS));

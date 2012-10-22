@@ -27,12 +27,12 @@ VALUE rb_time_from_mxf_timestamp(mxfTimestamp *ts)
 }
 
 static
-VALUE rb_str_from_label(char *buf, const unsigned char *lbl, int len)
+VALUE rb_str_from_label(const unsigned char *lbl, int len)
 {
   char hex[len * 2 + 1];
   for(int i = 0; i < len; i++)
   {
-    sprintf(&hex[i * 2], "%02x", uid[i]);
+    sprintf(&hex[i * 2], "%02x", lbl[i]);
   }
   hex[len * 2 + 1] = '\0';
   return rb_str_new2(hex);
@@ -64,7 +64,7 @@ VALUE rb_str_from_label(char *buf, const unsigned char *lbl, int len)
   {                                                                         \
     AvidMXFInfo *info;                                                      \
     Data_Get_Struct(self, AvidMXFInfo, info);                               \
-    return rb_str_from_label((unsigned char*) ( info-> attr ), len )        \
+    return rb_str_from_label((unsigned char*) &( info-> attr ), len );      \
   }
 
 #define CIO_RATIONAL_GETTER(name, attr)                                     \
@@ -142,7 +142,6 @@ CIO_INT_GETTER(num_video_tracks, numVideoTracks)
 CIO_INT_GETTER(num_audio_tracks, numAudioTracks)
 CIO_STRING_GETTER(tracks_string, tracksString)
 CIO_UINT_GETTER(track_number, trackNumber)
-CIO_INT_GETTER(is_video, isVideo)
 CIO_RATIONAL_GETTER(edit_rate, editRate)
 CIO_INT64_GETTER(track_duration, trackDuration)
 CIO_INT64_GETTER(segment_duration, segmentDuration)
@@ -152,7 +151,6 @@ CIO_LABEL_GETTER(essence_container_label, essenceContainerLabel, 16)
 CIO_LABEL_GETTER(file_source_package_uid, fileSourcePackageUID, 32)
 CIO_LABEL_GETTER(picture_coding_label, pictureCodingLabel, 16)
 CIO_UINT_GETTER(frame_layout, frameLayout)
-CIO_RATIONAL_GETTER(aspect_ratio, aspectRatio)
 CIO_UINT_GETTER(stored_width, storedWidth)
 CIO_UINT_GETTER(stored_height, storedHeight)
 CIO_UINT_GETTER(display_width, displayWidth)
@@ -196,11 +194,35 @@ VALUE cio_get_material_package_uid(VALUE self)
 */
 
 static
+VALUE cio_get_is_video(VALUE self)
+{
+  AvidMXFInfo *info;
+  Data_Get_Struct(self, AvidMXFInfo, info);
+  return info->isVideo ? Qtrue : Qfalse;
+}
+
+static
 VALUE cio_get_essence_type(VALUE self)
 {
   AvidMXFInfo *info;
   Data_Get_Struct(self, AvidMXFInfo, info);
-  return rb_str_new2(get_essence_type_string(info->essenceType, info->projectEditRate)));
+  return rb_str_new2(get_essence_type_string(info->essenceType, info->projectEditRate));
+}
+
+static
+VALUE cio_get_aspect_ratio(VALUE self)
+{
+  AvidMXFInfo *info;
+  Data_Get_Struct(self, AvidMXFInfo, info);
+  if(info->isVideo && info->aspectRatio.denominator != 0)
+  {
+    return rb_rational_new(INT2FIX(info->aspectRatio.numerator),
+      INT2FIX(info->aspectRatio.denominator)); 
+  }
+  else
+  {
+    return Qnil;
+  }
 }
 
 static
@@ -209,21 +231,21 @@ VALUE cio_get_physical_package_type(VALUE self)
   AvidMXFInfo *info;
   Data_Get_Struct(self, AvidMXFInfo, info);
 
-  VALUE ret;
+  VALUE ret = Qnil;
   switch (info->physicalPackageType)
   {
   case TAPE_PHYS_TYPE:
-    ret = ID2SYM(rb_intern('tape'));
+    ret = ID2SYM(rb_intern("tape"));
     break;
   case IMPORT_PHYS_TYPE:
-    ret = ID2SYM(rb_intern('import'));
+    ret = ID2SYM(rb_intern("import"));
     break;
   case RECORDING_PHYS_TYPE:
-    ret = ID2SYM(rb_intern('recording'));
+    ret = ID2SYM(rb_intern("recording"));
     break;
   case UNKNOWN_PHYS_TYPE:
   default:
-    ret = ID2SYM(rb_intern('unknown'));
+    ret = ID2SYM(rb_intern("unknown"));
     break;
   }
 
