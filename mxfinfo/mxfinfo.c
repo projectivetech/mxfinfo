@@ -5,7 +5,7 @@
 /* Helpers. */
 
 static
-time_t mxf_timestamp_to_time_t(mxfTimestamp *ts)
+VALUE rb_time_from_mxf_timestamp(mxfTimestamp *ts)
 {
 	/*
 	 * NOTE: This is probably not thread-safe, since struct tm*
@@ -23,7 +23,19 @@ time_t mxf_timestamp_to_time_t(mxfTimestamp *ts)
 	tmts->tm_min = (int) ts->min;
 	tmts->tm_sec = (int) ts->sec;
 
-	return mktime(tmts);
+  return rb_time_new(mktime(tmts), ts->qmsec);
+}
+
+static
+VALUE rb_str_from_label(char *buf, const unsigned char *lbl, int len)
+{
+  char hex[len * 2 + 1];
+  for(int i = 0; i < len; i++)
+  {
+    sprintf(&hex[i * 2], "%02x", uid[i]);
+  }
+  hex[len * 2 + 1] = '\0';
+  return rb_str_new2(hex);
 }
 
 /* Some macros. */
@@ -37,13 +49,32 @@ time_t mxf_timestamp_to_time_t(mxfTimestamp *ts)
     return cast (info-> attr );                                             \
   }
 
-#define CIO_STRING_GETTER( name, attr)                                      \
+#define CIO_STRING_GETTER(name, attr)                                       \
   static                                                                    \
   VALUE cio_get_##name (VALUE self)                                         \
   {                                                                         \
     AvidMXFInfo *info;                                                      \
     Data_Get_Struct(self, AvidMXFInfo, info);                               \
     return ((info-> attr ) != NULL) ? rb_str_new2(info-> attr ) : Qnil;     \
+  }
+
+#define CIO_LABEL_GETTER(name, attr, len)                                   \
+  static                                                                    \
+  VALUE cio_get_##name (VALUE self)                                         \
+  {                                                                         \
+    AvidMXFInfo *info;                                                      \
+    Data_Get_Struct(self, AvidMXFInfo, info);                               \
+    return rb_str_from_label((unsigned char*) ( info-> attr ), len )        \
+  }
+
+#define CIO_RATIONAL_GETTER(name, attr)                                     \
+  static                                                                    \
+  VALUE cio_get_##name (VALUE self)                                         \
+  {                                                                         \
+    AvidMXFInfo *info;                                                      \
+    Data_Get_Struct(self, AvidMXFInfo, info);                               \
+    return rb_rational_new(INT2FIX((info-> attr ).numerator),               \
+      INT2FIX((info-> attr ).denominator));                                 \
   }
 
 #define CIO_INT_GETTER(name, attr) CIO_GENERIC_GETTER(INT2FIX, name, attr)
@@ -104,45 +135,54 @@ VALUE cio_new(VALUE class, VALUE path)
 
 CIO_STRING_GETTER(clip_name, clipName)
 CIO_STRING_GETTER(project_name, projectName)
+CIO_RATIONAL_GETTER(project_edit_rate, projectEditRate)
 CIO_INT64_GETTER(clip_duration, clipDuration)
+CIO_LABEL_GETTER(material_package_uid, materialPackageUID, 32)
 CIO_INT_GETTER(num_video_tracks, numVideoTracks)
 CIO_INT_GETTER(num_audio_tracks, numAudioTracks)
 CIO_STRING_GETTER(tracks_string, tracksString)
 CIO_UINT_GETTER(track_number, trackNumber)
 CIO_INT_GETTER(is_video, isVideo)
+CIO_RATIONAL_GETTER(edit_rate, editRate)
 CIO_INT64_GETTER(track_duration, trackDuration)
 CIO_INT64_GETTER(segment_duration, segmentDuration)
 CIO_INT64_GETTER(segment_offset, segmentOffset)
 CIO_INT64_GETTER(start_timecode, startTimecode)
-/* ... */
+CIO_LABEL_GETTER(essence_container_label, essenceContainerLabel, 16)
+CIO_LABEL_GETTER(file_source_package_uid, fileSourcePackageUID, 32)
+CIO_LABEL_GETTER(picture_coding_label, pictureCodingLabel, 16)
+CIO_UINT_GETTER(frame_layout, frameLayout)
+CIO_RATIONAL_GETTER(aspect_ratio, aspectRatio)
+CIO_UINT_GETTER(stored_width, storedWidth)
+CIO_UINT_GETTER(stored_height, storedHeight)
+CIO_UINT_GETTER(display_width, displayWidth)
+CIO_UINT_GETTER(display_height, displayHeight)
+CIO_RATIONAL_GETTER(audio_sampling_rate, audioSamplingRate)
 CIO_UINT_GETTER(channel_count, channelCount)
+CIO_UINT_GETTER(quantization_bits, quantizationBits)
+CIO_STRING_GETTER(physical_package_name, physicalPackageName)
+CIO_LABEL_GETTER(physical_source_package_uid, physicalSourcePackageUID, 32)
+CIO_STRING_GETTER(physical_package_locator, physicalPackageLocator)
 /* ... */
 
-/* Complex getters. */
+/* Random attributes that need special treatment. */
 
 static
 VALUE cio_get_clip_created(VALUE self)
 {
   AvidMXFInfo *info;
   Data_Get_Struct(self, AvidMXFInfo, info);
-  return rb_time_new(mxf_timestamp_to_time_t(&info->clipCreated), info->clipCreated.qmsec);
+  return rb_time_from_mxf_timestamp(&info->clipCreated);
 }
 
-static
-VALUE cio_get_project_edit_rate(VALUE self)
-{
-  AvidMXFInfo *info;
-  Data_Get_Struct(self, AvidMXFInfo, info);
-  return rb_rational_new(INT2FIX(info->projectEditRate.numerator), INT2FIX(info->projectEditRate.denominator));
-}
-
+/*
+ * Left that in for reference (array creation).
 static
 VALUE cio_get_material_package_uid(VALUE self)
 {
   AvidMXFInfo *info;
   Data_Get_Struct(self, AvidMXFInfo, info);
 
-  /* Let's hope the struct is packed. */
   unsigned char *uid = (unsigned char*) &info->materialPackageUID;
 
   VALUE ary = rb_ary_new2(32);
@@ -153,13 +193,41 @@ VALUE cio_get_material_package_uid(VALUE self)
 
   return ary;
 }
+*/
 
 static
-VALUE cio_get_edit_rate(VALUE self)
+VALUE cio_get_essence_type(VALUE self)
 {
   AvidMXFInfo *info;
   Data_Get_Struct(self, AvidMXFInfo, info);
-  return rb_rational_new(INT2FIX(info->editRate.numerator), INT2FIX(info->editRate.denominator));
+  return rb_str_new2(get_essence_type_string(info->essenceType, info->projectEditRate)));
+}
+
+static
+VALUE cio_get_physical_package_type(VALUE self)
+{
+  AvidMXFInfo *info;
+  Data_Get_Struct(self, AvidMXFInfo, info);
+
+  VALUE ret;
+  switch (info->physicalPackageType)
+  {
+  case TAPE_PHYS_TYPE:
+    ret = ID2SYM(rb_intern('tape'));
+    break;
+  case IMPORT_PHYS_TYPE:
+    ret = ID2SYM(rb_intern('import'));
+    break;
+  case RECORDING_PHYS_TYPE:
+    ret = ID2SYM(rb_intern('recording'));
+    break;
+  case UNKNOWN_PHYS_TYPE:
+  default:
+    ret = ID2SYM(rb_intern('unknown'));
+    break;
+  }
+
+  return ret;
 }
 
 /* Module init. */
@@ -193,28 +261,21 @@ void Init_mxfinfo()
   rb_define_method(c_infoobject, "segment_duration", cio_get_segment_duration, 0);
   rb_define_method(c_infoobject, "segment_offset", cio_get_segment_offset, 0);
   rb_define_method(c_infoobject, "start_timecode", cio_get_start_timecode, 0);
-  
-  /*
-  AvidEssenceType essenceType;
-  mxfUMID fileSourcePackageUID;
-  mxfUL essenceContainerLabel;
-  mxfUL pictureCodingLabel;
-  uint8_t frameLayout;
-  mxfRational aspectRatio;
-  uint32_t storedWidth;
-  uint32_t storedHeight;
-  uint32_t displayWidth;
-  uint32_t displayHeight;
-  mxfRational audioSamplingRate;
-  */
-
+  rb_define_method(c_infoobject, "essence_type", cio_get_essence_type, 0);
+  rb_define_method(c_infoobject, "essence_container_label", cio_get_essence_container_label, 0);
+  rb_define_method(c_infoobject, "file_source_package_uid", cio_get_file_source_package_uid, 0);
+  rb_define_method(c_infoobject, "picture_coding_label", cio_get_picture_coding_label, 0);
+  rb_define_method(c_infoobject, "frame_layout", cio_get_frame_layout, 0);
+  rb_define_method(c_infoobject, "aspect_ratio", cio_get_aspect_ratio, 0);
+  rb_define_method(c_infoobject, "stored_width", cio_get_stored_width, 0);
+  rb_define_method(c_infoobject, "stored_height", cio_get_stored_height, 0);
+  rb_define_method(c_infoobject, "display_width", cio_get_display_width, 0);
+  rb_define_method(c_infoobject, "display_height", cio_get_display_height, 0);
+  rb_define_method(c_infoobject, "audio_sampling_rate", cio_get_audio_sampling_rate, 0);
   rb_define_method(c_infoobject, "channel_count", cio_get_channel_count, 0);
-
-  /*
-  uint32_t quantizationBits;
-  char *physicalPackageName;
-  mxfUMID physicalSourcePackageUID;
-  AvidPhysicalPackageType physicalPackageType;
-  char *physicalPackageLocator;
-  */
+  rb_define_method(c_infoobject, "quantization_bits", cio_get_quantization_bits, 0);
+  rb_define_method(c_infoobject, "physical_package_name", cio_get_physical_package_name, 0);
+  rb_define_method(c_infoobject, "physical_source_package_uid", cio_get_physical_source_package_uid, 0);
+  rb_define_method(c_infoobject, "physical_package_type", cio_get_physical_package_type, 0);
+  rb_define_method(c_infoobject, "physical_package_locator", cio_get_physical_package_locator, 0);
 }
