@@ -114,11 +114,11 @@ VALUE cio_new(VALUE class, VALUE path)
               rb_raise(rb_eIOError, "Failed to read header partition.");
                 break;
             case -4:
-              rb_raise(rb_eException, "File is not OP-Atom.");
+              rb_raise(rb_eStandardError, "File is not OP-Atom.");
                 break;
             case -1:
             default:
-              rb_raise(rb_eException, "Failed to read info.");
+              rb_raise(rb_eStandardError, "Failed to read info.");
                 break;
     }
 
