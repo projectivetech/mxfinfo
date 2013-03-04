@@ -1325,7 +1325,7 @@ int ami_read_info(const char *filename, AvidMXFInfo *info, int printDebugError)
                 }
                 else
                 {
-                    mxf_log_warn("Ignoring non-zero TimecodeComponent::StartTimecode because edit rate combination not supported\n");
+                    // mxf_log_warn("Ignoring non-zero TimecodeComponent::StartTimecode because edit rate combination not supported\n");
                     /* TODO: complete support for different timecode and track edit rates */
                 }
             }
