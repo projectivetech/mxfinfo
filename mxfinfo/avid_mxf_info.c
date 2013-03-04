@@ -51,8 +51,8 @@
 #define DEBUG_PRINT_ERROR(cmd) \
     if (printDebugError) \
     { \
-        //fprintf(stderr, "'%s' failed in %s, line %d\n", #cmd, __FILE__, __LINE__); \
-    } \
+        ; \
+    }
 
 #define CHECK(cmd, ecode) \
     if (!(cmd)) \
