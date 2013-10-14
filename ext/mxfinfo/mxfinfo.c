@@ -17,7 +17,7 @@ VALUE rb_time_from_mxf_timestamp(mxfTimestamp *ts)
 	tmts = localtime(&t);
 
 	tmts->tm_year = (int) ts->year - 1900;
-	tmts->tm_mon = (int) ts->month;
+	tmts->tm_mon = (int) ts->month - 1;
 	tmts->tm_mday = (int) ts->day;
 	tmts->tm_hour = (int) ts->hour;
 	tmts->tm_min = (int) ts->min;
@@ -252,6 +252,15 @@ VALUE cio_get_physical_package_type(VALUE self)
   return ret;
 }
 
+static
+VALUE cio_get_clip_track_string(VALUE self)
+{
+  AvidMXFInfo *info;
+  Data_Get_Struct(self, AvidMXFInfo, info);
+
+  return rb_str_new2((info->tracksString == NULL) ? "" : info->tracksString);
+}
+
 /* Module init. */
 
 void Init_mxfinfo()
@@ -300,4 +309,5 @@ void Init_mxfinfo()
   rb_define_method(c_infoobject, "physical_source_package_uid", cio_get_physical_source_package_uid, 0);
   rb_define_method(c_infoobject, "physical_package_type", cio_get_physical_package_type, 0);
   rb_define_method(c_infoobject, "physical_package_locator", cio_get_physical_package_locator, 0);
+  rb_define_method(c_infoobject, "clip_track_string", cio_get_clip_track_string, 0);
 }

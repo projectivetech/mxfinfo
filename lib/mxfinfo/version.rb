@@ -1,3 +1,3 @@
-class MXFinfo
-  VERSION = "0.0.3.6"
+module MXFInfo
+  VERSION = '0.1.0'
 end

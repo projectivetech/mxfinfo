@@ -1,3 +1,4 @@
+lib/mxfinfo.so
 Gemfile.lock
 *.gem
 *.rbc

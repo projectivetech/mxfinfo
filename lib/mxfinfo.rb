@@ -1,4 +1,5 @@
 require 'mxfinfo.so'
+require 'mxfinfo/version.rb'
 
 module MXFInfo
   def self.scan(path)
@@ -8,12 +9,14 @@ module MXFInfo
   class InfoObject
     alias_method :videotracks, :num_video_tracks
     alias_method :v_tracks, :num_video_tracks 
-    alias_method :audiotracks, :num_audio_tracks 
+    alias_method :video_tracks, :num_video_tracks
+    alias_method :audiotracks, :num_audio_tracks
+    alias_method :audio_tracks, :num_audio_tracks
     alias_method :a_tracks, :num_audio_tracks
     alias_method :clip_created_at, :clip_created
     alias_method :essence_label, :essence_container_label
-    alias_method :tracknumber, :track_number
     alias_method :t_number, :track_number
+    alias_method :tracknumber, :track_number
     alias_method :channelcount, :channel_count
     alias_method :c_count, :channel_count
     alias_method :file_package_uid, :file_source_package_uid
@@ -22,10 +25,10 @@ module MXFInfo
       physical_package_name == "Precompute Source Mob"
     end
 
-    old_essence_type = instance_method(:essence_type)
-    define_method(:essence_type) do 
-      result = old_essence_type.bind(self).()
-      if result.starts_with?("DNxHD")
+    alias_method :essence_type_orig, :essence_type
+    def essence_type
+      result = self.send(:essence_type_orig)
+      if result.start_with?("DNxHD")
         result.gsub!(/ \(\d+\)/, "")
       end
       result
