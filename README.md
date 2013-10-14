@@ -1,4 +1,4 @@
-mxfinfo
-=======
+# MXFinfo
 
-MXFinfo is a gem to use avidmxfinfo from http://ingex.sourceforge.net/ directly.
+MXFinfo takes `avidmxfinfo` from [libmxf](https://github.com/ebu/ebu-libmxf/) and wraps it in a simple ruby native extension.
+
