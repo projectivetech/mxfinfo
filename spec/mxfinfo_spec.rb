@@ -6,7 +6,7 @@ describe 'MXFInfo' do
       it 'should raise an error' do
         expect {
           MXFInfo.scan File.expand_path('../fixtures/InvalidFileTest.mxf', __FILE__)
-        }.to raise_error(IOError)
+        }.to raise_error(/Failed to read header partition/)
       end
     end
 
