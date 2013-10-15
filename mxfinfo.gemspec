@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'mxfinfo'
   gem.require_paths = ['lib']
   gem.version       = MXFInfo::VERSION
-  gem.required_ruby_version = '>= 1.8.1'
+  gem.required_ruby_version = '>= 1.9.3'
   gem.license	    = 'MIT'
 
   gem.add_development_dependency 'rspec'
