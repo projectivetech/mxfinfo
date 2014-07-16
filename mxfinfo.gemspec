@@ -14,10 +14,11 @@ Gem::Specification.new do |gem|
   gem.name          = 'mxfinfo'
   gem.require_paths = ['lib']
   gem.version       = MXFInfo::VERSION
-  gem.required_ruby_version = '>= 1.9.3'
-  gem.license	    = 'MIT'
+  gem.license       = 'MIT'
 
-  gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'rake-compiler'
+  gem.required_ruby_version = '>= 1.9.3'
+
+  gem.add_development_dependency 'rspec', '~> 2.14'
+  gem.add_development_dependency 'rake-compiler', '~> 0.9'
 end
 
