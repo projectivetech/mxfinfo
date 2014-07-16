@@ -1,5 +1,6 @@
 #include <time.h>
 #include <ruby.h>
+#include <ruby/thread.h>
 #include "avid_mxf_info.h"
 
 /* Helpers. */
@@ -91,6 +92,20 @@ void cio_free(void *ptr) {
   ami_free_info(ptr);
 }
 
+typedef struct {
+  const char *fn;
+  AvidMXFInfo *info;
+  int result;
+} AmiReadInfoParams;
+
+static
+void* ami_read_info_without_gvl(void* ptr)
+{
+  AmiReadInfoParams* params = (AmiReadInfoParams*) ptr;
+  params->result = ami_read_info(params->fn, params->info, 1);
+  return NULL;
+}
+
 static 
 VALUE cio_new(VALUE class, VALUE path)
 {
@@ -99,13 +114,19 @@ VALUE cio_new(VALUE class, VALUE path)
 
   AvidMXFInfo *info = ALLOC(AvidMXFInfo);
 
-  int result = ami_read_info(fn, info, 1);
+  AmiReadInfoParams params = {
+    fn,
+    info,
+    -1
+  };
 
-  if(result != 0) 
+  rb_thread_call_without_gvl(ami_read_info_without_gvl, (void*) &params, NULL, NULL);
+
+  if(params.result != 0)
   {
     ami_free_info(info);
 
-    switch(result) 
+    switch(params.result)
     {
             case -2:
               rb_raise(rb_eIOError, "Failed to open file.");
