@@ -124,7 +124,7 @@ VALUE cio_new(VALUE class, VALUE path)
 
   if(params.result != 0)
   {
-    ami_free_info(info);
+    // NOTE: When ami_read_info failed, *info has already been free'd.
 
     switch(params.result)
     {
