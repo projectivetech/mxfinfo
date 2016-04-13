@@ -3,7 +3,14 @@ require 'mxfinfo/version.rb'
 
 module MXFInfo
   def self.scan(path)
+    io = IO.new(2)
+    stderr = io.dup
+    io.reopen(IO::NULL)
     InfoObject.new path
+  rescue => e
+    io.reopen stderr
+    stderr.close
+    raise e
   end
 
   class InfoObject
