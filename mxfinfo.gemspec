@@ -18,7 +18,8 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9.3'
 
-  gem.add_development_dependency 'rspec', '~> 2.14'
+  gem.add_development_dependency 'rspec', '~> 3'
+  gem.add_development_dependency 'rspec-its'
   gem.add_development_dependency 'rake-compiler', '~> 0.9'
 end
 
