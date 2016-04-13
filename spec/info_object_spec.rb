@@ -11,6 +11,7 @@ describe 'MXFInfo::InfoObject' do
     its(:clip_created_at) { should eq(Time.parse('2011-05-08 22:02:53.000')) }
     its(:project_edit_rate) { should eq((25/1)) }
     its(:clip_duration) { should eq(287) }
+    its(:clip_edit_rate) { should eq((25/1)) }
     its(:video_tracks) { should eq(1) }
     its(:audio_tracks) { should eq(1) }
     its(:clip_track_string) { should eq('V1 A1') }
@@ -22,7 +23,6 @@ describe 'MXFInfo::InfoObject' do
     its(:segment_duration) { should eq(551040) }
     its(:segment_offset) { should eq(0) }
     its(:start_timecode) { should eq(0) }
-    # its_converted(:start_timecode) { should eq('00:00:00:00') }
     its(:audio_sampling_rate) { should eq((48000/1)) }
     its(:quantization_bits) { should eq(16) }
     its(:channel_count) { should eq(1) }
@@ -32,11 +32,5 @@ describe 'MXFInfo::InfoObject' do
     its(:physical_package_type) { should eq(:import) }
     its(:physical_package_name) { should eq('IMG_0395.MOV') }
     its(:physical_package_locator) { should eq('file:///Macintosh%20HD/Users/susannehassepass/Desktop/London%201video/IMG_0395.MOV') }
-
-    # Left-overs from the previous version (0.3.6) of mxfinfo
-
-#    its(:unc_path) { should('Macintosh HD:Users:susannehassepass:Desktop:London 1video:IMG_0395.MOV') }
-# => Isn't exported from libmxf.
-
   end
 end

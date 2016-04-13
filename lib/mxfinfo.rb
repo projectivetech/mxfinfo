@@ -27,6 +27,7 @@ module MXFInfo
     alias_method :channelcount, :channel_count
     alias_method :c_count, :channel_count
     alias_method :file_package_uid, :file_source_package_uid
+    alias_method :clip_edit_rate, :project_edit_rate
 
     def render_file?
       physical_package_name == "Precompute Source Mob"
