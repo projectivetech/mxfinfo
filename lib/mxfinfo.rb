@@ -32,14 +32,5 @@ module MXFInfo
     def render_file?
       physical_package_name == "Precompute Source Mob"
     end
-
-    alias_method :essence_type_orig, :essence_type
-    def essence_type
-      result = self.send(:essence_type_orig)
-      if result.start_with?("DNxHD")
-        result.gsub!(/ \(\d+\)/, "")
-      end
-      result
-    end
   end
 end
