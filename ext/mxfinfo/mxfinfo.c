@@ -74,8 +74,12 @@ VALUE rb_str_from_label(const unsigned char *lbl, int len)
   {                                                                         \
     AvidMXFInfo *info;                                                      \
     Data_Get_Struct(self, AvidMXFInfo, info);                               \
-    return rb_rational_new(INT2FIX((info-> attr ).numerator),               \
-      INT2FIX((info-> attr ).denominator));                                 \
+    if((info->attr).denominator == 0) {                                     \
+      return Qnil;                                                          \
+    } else {                                                                \
+      return rb_rational_new(INT2FIX((info-> attr ).numerator),             \
+        INT2FIX((info-> attr ).denominator));                               \
+    }                                                                       \
   }
 
 #define CIO_INT_GETTER(name, attr) CIO_GENERIC_GETTER(INT2FIX, name, attr)
@@ -106,7 +110,7 @@ void* ami_read_info_without_gvl(void* ptr)
   return NULL;
 }
 
-static 
+static
 VALUE cio_new(VALUE class, VALUE path)
 {
   Check_Type(path, T_STRING);
@@ -144,7 +148,7 @@ VALUE cio_new(VALUE class, VALUE path)
     }
 
     return Qnil;
-  } 
+  }
   else
   {
     VALUE tdata = Data_Wrap_Struct(class, 0, cio_free, info);
@@ -205,7 +209,7 @@ VALUE cio_get_material_package_uid(VALUE self)
   unsigned char *uid = (unsigned char*) &info->materialPackageUID;
 
   VALUE ary = rb_ary_new2(32);
-  for(unsigned int i = 0; i < 32; i++) 
+  for(unsigned int i = 0; i < 32; i++)
   {
     rb_ary_store(ary, i, CHR2FIX(uid[i]));
   }
@@ -238,7 +242,7 @@ VALUE cio_get_aspect_ratio(VALUE self)
   if(info->isVideo && info->aspectRatio.denominator != 0)
   {
     return rb_rational_new(INT2FIX(info->aspectRatio.numerator),
-      INT2FIX(info->aspectRatio.denominator)); 
+      INT2FIX(info->aspectRatio.denominator));
   }
   else
   {
@@ -286,11 +290,11 @@ VALUE cio_get_clip_track_string(VALUE self)
 
 void Init_mxfinfo()
 {
-  m_mxfinfo = rb_define_module("MXFInfo");	
+  m_mxfinfo = rb_define_module("MXFInfo");
 
 	c_infoobject = rb_define_class_under(m_mxfinfo, "InfoObject", rb_cObject);
   rb_define_singleton_method(c_infoobject, "new", cio_new, 1);
-	
+
   rb_define_method(c_infoobject, "clip_name", cio_get_clip_name, 0);
   rb_define_method(c_infoobject, "project_name", cio_get_project_name, 0);
   rb_define_method(c_infoobject, "clip_created", cio_get_clip_created, 0);
@@ -302,7 +306,7 @@ void Init_mxfinfo()
   /* int numUserComments */
   /* AvidTaggedValue *materialPackageAttributes */
   /* int numMaterialPackageAttributes */
-  
+
   rb_define_method(c_infoobject, "num_video_tracks", cio_get_num_video_tracks, 0);
   rb_define_method(c_infoobject, "num_audio_tracks", cio_get_num_audio_tracks, 0);
   rb_define_method(c_infoobject, "tracks_string", cio_get_tracks_string, 0);

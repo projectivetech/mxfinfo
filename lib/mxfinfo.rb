@@ -15,7 +15,7 @@ module MXFInfo
 
   class InfoObject
     alias_method :videotracks, :num_video_tracks
-    alias_method :v_tracks, :num_video_tracks 
+    alias_method :v_tracks, :num_video_tracks
     alias_method :video_tracks, :num_video_tracks
     alias_method :audiotracks, :num_audio_tracks
     alias_method :audio_tracks, :num_audio_tracks
