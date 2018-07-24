@@ -295,7 +295,7 @@ void Init_mxfinfo()
 	c_infoobject = rb_define_class_under(m_mxfinfo, "InfoObject", rb_cObject);
   rb_define_singleton_method(c_infoobject, "new", cio_new, 1);
 
-  rb_define_method(c_infoobject, "clip_name", cio_get_clip_name, 0);
+  rb_define_method(c_infoobject, "_clip_name", cio_get_clip_name, 0);
   rb_define_method(c_infoobject, "project_name", cio_get_project_name, 0);
   rb_define_method(c_infoobject, "clip_created", cio_get_clip_created, 0);
   rb_define_method(c_infoobject, "project_edit_rate", cio_get_project_edit_rate, 0);

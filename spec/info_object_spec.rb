@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'time'
 
 describe 'MXFInfo::InfoObject' do
   context 'when created from an valid MXF file' do

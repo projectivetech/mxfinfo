@@ -32,5 +32,9 @@ module MXFInfo
     def render_file?
       physical_package_name == "Precompute Source Mob"
     end
+
+    def clip_name
+      _clip_name.force_encoding('UTF-8')
+    end
   end
 end

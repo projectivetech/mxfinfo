@@ -20,7 +20,11 @@ describe 'MXFInfo' do
       it 'should return an InfoObject instance' do
         expect(MXFInfo.scan File.expand_path('../fixtures/IMG_0395.MOV.A14DC7130D.mxf', __FILE__)).to be_a(MXFInfo::InfoObject)
       end
-    end 
+
+      it 'should return an UTF-8 clip_name' do
+        expect(MXFInfo.scan(File.expand_path('../fixtures/IMG_0395.MOV.A14DC7130D.mxf', __FILE__)).clip_name.encoding).to eq(Encoding::UTF_8)
+      end
+    end
   end
 end
 
