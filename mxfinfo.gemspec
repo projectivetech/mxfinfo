@@ -1,14 +1,14 @@
-require File.expand_path('../lib/mxfinfo/version', __FILE__)
+require File.expand_path('lib/mxfinfo/version', __dir__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ['Steve Dierker', 'Malte Rohde']
-  gem.email         = ['technology@flavoursys.com']
-  gem.description   = %q{MXFinfo is a gem that wraps avidmxfinfo from libmxf in a native ruby extension.}
-  gem.summary       = %q{MXFinfo is a gem that wraps avidmxfinfo from libmxf in a native ruby extension.}
-  gem.homepage      = 'http://github.com/flavoursys/mxfinfo'
+  gem.email         = ['technology@projective.io']
+  gem.description   = 'MXFinfo is a gem that wraps avidmxfinfo from libmxf in a native ruby extension.'
+  gem.summary       = 'MXFinfo is a gem that wraps avidmxfinfo from libmxf in a native ruby extension.'
+  gem.homepage      = 'http://github.com/projectivetech/mxfinfo'
 
-  gem.files         = `git ls-files`.split($\)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
+  gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.extensions    = ['ext/mxfinfo/extconf.rb']
   gem.name          = 'mxfinfo'
@@ -18,8 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 1.9.3'
 
+  gem.add_development_dependency 'rake-compiler', '~> 0.9'
   gem.add_development_dependency 'rspec', '~> 3'
   gem.add_development_dependency 'rspec-its', '1.2.0'
-  gem.add_development_dependency 'rake-compiler', '~> 0.9'
 end
-
