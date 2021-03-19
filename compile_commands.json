@@ -1,0 +1,52 @@
+[
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-I.",
+            "-I/home/steved/.rbenv/versions/2.5.8/include/ruby-2.5.0/x86_64-linux",
+            "-I/home/steved/.rbenv/versions/2.5.8/include/ruby-2.5.0/ruby/backward",
+            "-I/home/steved/.rbenv/versions/2.5.8/include/ruby-2.5.0",
+            "-I../../../../ext/mxfinfo",
+            "-I/opt/environments/strawberry/include/libMXF-1.0",
+            "--std=gnu99",
+            "-D_GNU_SOURCE",
+            "-Wall",
+            "-I/home/steved/.rbenv/versions/2.5.8/include",
+            "-fPIC",
+            "-O3",
+            "-ggdb3",
+            "-fPIC",
+            "-o",
+            "avid_mxf_info.o",
+            "../../../../ext/mxfinfo/avid_mxf_info.c"
+        ],
+        "directory": "/home/steved/Documents/projective/github/mxfinfo/tmp/x86_64-linux/mxfinfo/2.5.8",
+        "file": "../../../../ext/mxfinfo/avid_mxf_info.c"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-I.",
+            "-I/home/steved/.rbenv/versions/2.5.8/include/ruby-2.5.0/x86_64-linux",
+            "-I/home/steved/.rbenv/versions/2.5.8/include/ruby-2.5.0/ruby/backward",
+            "-I/home/steved/.rbenv/versions/2.5.8/include/ruby-2.5.0",
+            "-I../../../../ext/mxfinfo",
+            "-I/opt/environments/strawberry/include/libMXF-1.0",
+            "--std=gnu99",
+            "-D_GNU_SOURCE",
+            "-Wall",
+            "-I/home/steved/.rbenv/versions/2.5.8/include",
+            "-fPIC",
+            "-O3",
+            "-ggdb3",
+            "-fPIC",
+            "-o",
+            "mxfinfo.o",
+            "../../../../ext/mxfinfo/mxfinfo.c"
+        ],
+        "directory": "/home/steved/Documents/projective/github/mxfinfo/tmp/x86_64-linux/mxfinfo/2.5.8",
+        "file": "../../../../ext/mxfinfo/mxfinfo.c"
+    }
+]
