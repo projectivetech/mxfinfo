@@ -9,13 +9,12 @@ static
 VALUE rb_time_from_mxf_timestamp(mxfTimestamp *ts)
 {
 	/*
-	 * NOTE: This is probably not thread-safe, since struct tm*
-	 * returned by localtime is shared static.
+	 * NOTE: This is probably not thread-safe, since struct tm* returned by localtime is shared static.
 	 */
 	time_t t;
 	time(&t);
 	struct tm *tmts;
-	tmts = localtime(&t);
+	tmts = gmtime(&t);
 
 	tmts->tm_year = (int) ts->year - 1900;
 	tmts->tm_mon = (int) ts->month - 1;
@@ -23,6 +22,7 @@ VALUE rb_time_from_mxf_timestamp(mxfTimestamp *ts)
 	tmts->tm_hour = (int) ts->hour;
 	tmts->tm_min = (int) ts->min;
 	tmts->tm_sec = (int) ts->sec;
+  tmts->tm_isdst = -1;
 
   return rb_time_new(mktime(tmts), ts->qmsec);
 }
@@ -90,6 +90,9 @@ VALUE rb_str_from_label(const unsigned char *lbl, int len)
 
 VALUE m_mxfinfo = Qnil;
 VALUE c_infoobject = Qnil;
+VALUE c_error = Qnil;
+VALUE c_eNotOpAtom = Qnil;
+VALUE c_eNotReadable = Qnil;
 
 static
 void cio_free(void *ptr) {
@@ -133,17 +136,17 @@ VALUE cio_new(VALUE class, VALUE path)
     switch(params.result)
     {
             case -2:
-              rb_raise(rb_eIOError, "Failed to open file.");
+              rb_raise(c_eNotReadable, "Failed to open file.");
                 break;
             case -3:
-              rb_raise(rb_eIOError, "Failed to read header partition.");
+              rb_raise(c_eNotReadable, "Failed to read header partition.");
                 break;
             case -4:
-              rb_raise(rb_eStandardError, "File is not OP-Atom.");
+              rb_raise(c_eNotOpAtom, "File is not OP-Atom.");
                 break;
             case -1:
             default:
-              rb_raise(rb_eStandardError, "Failed to read info.");
+              rb_raise(c_eNotReadable, "Failed to read info.");
                 break;
     }
 
@@ -291,6 +294,10 @@ VALUE cio_get_clip_track_string(VALUE self)
 void Init_mxfinfo()
 {
   m_mxfinfo = rb_define_module("MXFInfo");
+
+  c_error = rb_define_class_under(m_mxfinfo, "Error", rb_eStandardError);
+  c_eNotOpAtom = rb_define_class_under(c_error, "NotOpAtom", c_error);
+  c_eNotReadable = rb_define_class_under(c_error, "NotReadable", c_error);
 
 	c_infoobject = rb_define_class_under(m_mxfinfo, "InfoObject", rb_cObject);
   rb_define_singleton_method(c_infoobject, "new", cio_new, 1);
