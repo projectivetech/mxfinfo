@@ -34,7 +34,7 @@ module MXFInfo
     end
 
     def clip_name
-      _clip_name.force_encoding('UTF-8')
+      _clip_name&.force_encoding('UTF-8')
     end
   end
 end
